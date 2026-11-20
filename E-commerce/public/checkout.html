@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Storefront</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div id="alert"></div>
+  <header>
+    <div class="container top-bar">
+      <a href="index.html" class="logo">STOREFRONT</a>
+      <nav class="nav-links">
+        <a href="index.html">Products</a>
+        <a href="cart.html">Cart <span id="cart-badge" class="cart-badge" style="display:none"><span id="cart-count">0</span></span></a>
+        <div id="auth-links" class="auth-links">
+          <a href="auth.html" class="btn-outline">Login</a>
+          <a href="auth.html" class="btn-primary">Register</a>
+        </div>
+        <div id="user-menu" style="display:none; gap:0.75rem; align-items:center">
+          <span id="user-name" style="font-size:0.9rem;color:var(--muted)"></span>
+          <a href="#" id="logout-btn" class="btn-outline">Logout</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="checkout-page">
+    <div class="checkout-card">
+      <h2>Place Your Order</h2>
+      <div id="checkout-msg" class="msg error" style="display:none"></div>
+
+      <div class="order-items" id="order-items">
+        <div style="padding:1rem;color:var(--muted)">Loading cart&hellip;</div>
+      </div>
+      <div class="order-total">
+        Total: <span id="checkout-total">$0.00</span>
+      </div>
+      <button class="place-order" id="place-order">Place Order</button>
+      <div style="margin-top:1rem;text-align:center">
+        <a href="cart.html" class="btn-outline">Back to Cart</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">&copy; 2026 Storefront.</div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <script>
+    async function escapeHTML(str = '') {
+      return String(str).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" }[c]));
+    }
+
+    async function loadCheckout() {
+      const ok = await requireAuth();
+      if (!ok) return;
+
+      const container = document.getElementById('order-items');
+      const totalEl = document.getElementById('checkout-total');
+      const btn = document.getElementById('place-order');
+      const msg = document.getElementById('checkout-msg');
+
+      try {
+        const items = await fetchJSON(`${API}/cart`);
+
+        if (!items || items.length === 0) {
+          container.innerHTML = '<p style="padding:1rem;color:var(--muted)">Your cart is empty.</p>';
+          totalEl.textContent = '$0.00';
+          btn.disabled = true;
+          return;
+        }
+
+        let total = 0;
+        container.innerHTML = items.map(item => {
+          const line = (item.price || 0) * (item.quantity || 0);
+          total += line;
+          const img = item.image || 'https://placehold.co/60x60/e2e8f0/1f2937?text=Product';
+          return `
+            <div class="order-item">
+              <div class="order-item-image">
+                <img src="${img}" alt="${escapeHTML(item.name)}">
+              </div>
+              <div class="order-item-info">
+                <div class="order-item-name">${escapeHTML(item.name)}</div>
+                <div class="order-item-meta">${formatMoney(item.price)} x ${item.quantity}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        totalEl.textContent = formatMoney(total);
+
+        btn.addEventListener('click', async () => {
+          try {
+            msg.style.display = 'none';
+            btn.disabled = true;
+            btn.textContent = 'Processing&hellip;';
+            const data = await fetchJSON(`${API}/checkout`, { method: 'POST' });
+            showAlert('Order placed successfully!');
+            setTimeout(() => { window.location.pathname = '/checkout-success.html'; }, 800);
+          } catch (err) {
+            msg.textContent = err.message;
+            msg.style.display = 'block';
+            btn.disabled = false;
+            btn.textContent = 'Place Order';
+          }
+        });
+      } catch (err) {
+        msg.textContent = err.message;
+        msg.style.display = 'block';
+      }
+    }
+
+    loadCheckout();
+  </script>
+</body>
+</html>

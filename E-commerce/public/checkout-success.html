@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Confirmed — Lumen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="alert" class="alert"></div>
+
+  <header>
+    <div class="container top-bar">
+      <a href="index.html" class="logo"><span class="logo-icon">🛍️</span> Lumen</a>
+      <nav class="nav-links">
+        <a href="index.html">Shop</a>
+        <a href="index.html#categories">Categories</a>
+        <a href="index.html#featured">Featured</a>
+        <a href="cart.html">Cart <span id="cart-badge" class="cart-badge" style="display:none"><span
+              id="cart-count">0</span></span></a>
+        <div id="auth-links" class="auth-links">
+          <a href="auth.html" class="btn-outline">Login</a>
+          <a href="auth.html?mode=register" class="btn-primary">Sign Up</a>
+        </div>
+        <div id="user-menu" style="display:none; gap:0.75rem; align-items:center">
+          <span id="user-name" style="font-size:.9rem;color:var(--muted);font-weight:600"></span>
+          <a href="#" id="logout-btn" class="btn-outline">Logout</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <section class="success-page">
+    <div class="container">
+      <div class="success-icon">✓</div>
+      <h2>Order Confirmed!</h2>
+      <p class="sub">Thank you for your purchase. We've sent a confirmation to your email and your items are on the way.
+      </p>
+      <div
+        style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin:2rem 0;padding:1.5rem;background:#fff;border-radius:12px;border:1px solid var(--border);max-width:600px;margin-left:auto;margin-right:auto">
+        <div style="text-align:center">
+          <div style="font-size:1.5rem">📦</div>
+          <div style="font-size:.85rem;font-weight:600;margin-top:.25rem">Order Placed</div>
+        </div>
+        <div style="color:var(--muted)">→</div>
+        <div style="text-align:center">
+          <div style="font-size:1.5rem">🏭</div>
+          <div style="font-size:.85rem;font-weight:600;margin-top:.25rem">Processing</div>
+        </div>
+        <div style="color:var(--muted)">→</div>
+        <div style="text-align:center">
+          <div style="font-size:1.5rem">🚚</div>
+          <div style="font-size:.85rem;font-weight:600;margin-top:.25rem">Shipped</div>
+        </div>
+        <div style="color:var(--muted)">→</div>
+        <div style="text-align:center">
+          <div style="font-size:1.5rem">🏠</div>
+          <div style="font-size:.85rem;font-weight:600;margin-top:.25rem">Delivered</div>
+        </div>
+      </div>
+      <div class="success-actions">
+        <a href="index.html" class="btn-primary">Continue Shopping →</a>
+        <a href="#" onclick="alert('Order history coming soon!');return false" class="btn-outline">View Order</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-bottom">© 2026 Lumen. All rights reserved.</div>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+</body>
+
+</html>
